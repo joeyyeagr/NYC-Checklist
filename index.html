@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NYC Master Checklist</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #2a2a2a; /* Slightly darker background for the page */
+      color: #e0e0e0; /* Default text color */
+      margin: 20px;
+    }
+    h1 {
+      text-align: left; /* Align title to the left */
+      margin-left: 20px; /* Add margin for spacing */
+      color: #e0e0e0; /* Title color */
+    }
+    .dropdown-container {
+      display: flex;
+      justify-content: flex-start; /* Align dropdowns to the left */
+      gap: 20px; /* Add space between dropdowns */
+      margin-left: 20px; /* Align dropdowns to the left */
+    }
+    .dropdown-wrapper label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #b0b0b0; /* Softer text color for dropdown labels */
+      display: block; /* Ensure labels stay above the dropdowns */
+    }
+    select {
+      width: 250px; /* Uniform width for all dropdowns */
+      padding: 10px;
+      background-color: #3a3a3a; /* Slightly lighter dropdown background */
+      color: #ffffff; /* White text */
+      border: 1px solid rgb(0, 225, 255); /* Red border */
+      border-radius: 5px;
+      appearance: none; /* Remove default browser styling */
+      -webkit-appearance: none; /* Remove default browser styling for Webkit browsers */
+      background-image: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23b0b0b0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+      background-repeat: no-repeat;
+      background-position: calc(100% - 10px) center;
+      background-size: 16px;
+      cursor: pointer;
+    }
+    select option {
+      background-color: #3a3a3a; /* Match dropdown background */
+      color: #ffffff; /* White text */
+    }
+    select option:hover {
+      background-color: #4a4a4a; /* Lighter gray for dropdown hover */
+    }
+    .checklist-section {
+      margin-left: 20px; /* Align content to the left */
+      margin-top: -1px; /* Add spacing from dropdowns */
+      padding: 10px 0; /* Vertical padding reduced to focus inside the border */
+      background-color: transparent; /* Transparent background for section */
+    }
+    .checklist-border {
+      border: 1px solid rgb(0, 225, 255); /* Red border */
+      border-radius: 5px; /* Rounded corners */
+      padding: 10px; /* Padding for content inside the border */
+      background-color: #3a3a3a; /* Light gray strictly inside border */
+    }
+    .checklist-title {
+      font-weight: bold;
+      margin-top: 0; /* Remove top margin */
+      margin-bottom: 5px; /* Reduced distance to the border */
+      padding: 5px; /* Reduced padding */
+      background-color: transparent; /* Transparent background for title */
+      color: #e0e0e0; /* White text for title */
+      font-size: 1.1em; /* Font size */
+    }
+    .checklist-item {
+      display: flex;
+      align-items: center; /* Align text with checkbox */
+      margin-bottom: 2px; /* Minimal vertical spacing between items */
+      font-size: 1em; /* Default font size */
+      color: #ffffff; /* Explicitly set to pure white */
+      font-weight: normal; /* Non-bold text */
+    }
+    .checklist-item label {
+      cursor: pointer; /* Make text clickable */
+    }
+    .checklist-item input[type="checkbox"] {
+      width: 16px; /* Original checkbox size */
+      height: 16px; /* Original checkbox size */
+      margin-right: 10px;
+      border: 1px solid rgb(0, 225, 255); /* Red border */
+      appearance: none;
+      -webkit-appearance: none;
+      background-color: #2a2a2a; /* Dark gray fill, same for checked/unchecked */
+      position: relative;
+      cursor: pointer;
+    }
+    .checklist-item input[type="checkbox"]::after {
+      content: '';
+      display: block;
+      width: 4px; /* Adjusted width */
+      height: 10px; /* Adjusted height */
+      border: solid rgb(0, 225, 255); /* Red checkmark */
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      position: absolute;
+      top: -1px; /* Centered vertically */
+      left: 4px; /* Centered horizontally */
+      opacity: 0; /* Hidden by default */
+    }
+    .checklist-item input[type="checkbox"]:checked::after {
+      opacity: 1; /* Show checkmark when checked */
+    }
+    .checklist-item.indented {
+      padding-left: 40px; /* Add padding for visual indentation */
+    }
+    .checklist-item.bold label {
+      font-weight: bold;
+    }
+    /* New CSS for conditional items */
+    .conditional.pitch label {
+      color: rgb(0, 225, 255); 
+    }
+    .conditional.flat label {
+      color: rgb(0, 225, 255); 
+    }
+    .conditional.canopy label {
+      color: rgb(0, 225, 255); 
+    }
+    .conditional.landmark label {
+      color: rgb(0, 225, 255); 
+    }
+    .conditional.basement label {
+      color: rgb(0, 225, 255); 
+    }
+    .conditional.flood label {
+      color: rgb(0, 225, 255); 
+    }
+  </style>
+
+</head>
+<body>
+  <h1>NYC Master Checklist</h1>
+  <div class="dropdown-container">
+    <div class="dropdown-wrapper">
+      <label for="roof-type">Roof Type:</label>
+      <select id="roof-type">
+        <option value="" disabled selected>Select</option>
+        <option value="Pitch Roof">Pitch Roof</option>
+        <option value="Flat Roof (Canopy)">Flat Roof (Canopy)</option>
+        <option value="Flat Roof (Roof Mount)">Flat Roof (Roof Mount)</option>
+        <option value="Flat Roof (Tilt-Up)">Flat Roof (Tilt-Up)</option>
+        <option value="Flat Roof (Tilt-Up & Roof Mount)">Flat Roof (Tilt-Up & Roof Mount)</option>
+        <option value="Pitch & Flat Roof (Roof Mount)">Pitch & Flat Roof (Roof Mount)</option>
+        <option value="Pitch & Flat Roof (Tilt-Up)">Pitch & Flat Roof (Tilt-Up)</option>
+        <option value="Flat Roof (Canopy/Tilt/Roof Mount)">Flat Roof (Canopy/Tilt/Roof Mount)</option>
+      </select>
+    </div>
+    <div class="dropdown-wrapper">
+      <label for="outlier">Outlier Parameter:</label>
+      <select id="outlier">
+        <option value="" disabled selected>Select</option>
+        <option>Landmark</option>
+        <option>Basement/Garage Plan</option>
+        <option>Flood zone</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="checklist-section">
+    <div class="checklist-title">Pre-CAD</div>
+    <div class="checklist-border">
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Copy Datalinks.xlsm and NYC_Master_Template 2.0 into customer folder</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Verify building and zoning information in the Master NYC Excel</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Download CSV to customer folder</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Open Datalinks.xlsm</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Click green Import CSV button</label>
+        </div>
+        <div class="checklist-item indented">
+            <input type="checkbox" />
+            <label>Click on CSV downloaded from Master NYC Excel</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Input Cross Streets</label>
+        </div>
+        <div class="checklist-item indented">
+            <input type="checkbox" />
+            <label>Click on DOB Now link</label>
+        </div>
+        <div class="checklist-item indented">
+            <input type="checkbox" />
+            <label>Copy and Paste BIN imported with CSV</label>
+        </div>
+        <div class="checklist-item indented">
+            <input type="checkbox" />
+            <label>Copy cross streets from DOB Now into inputs in Datalinks Excel</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Input Rafter Info (If Applicable)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Input Roof Slopes</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Input Meter, Main Service and BOS locations</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Input Drafter Initials</label>
+        </div>
+        <div class="checklist-item bold">
+            <input type="checkbox" />
+            <label>Input Drafting phase to populate date</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Datalink information from Excel into CAD</label>
+        </div>
+        <div class="checklist-item indented">
+            <input type="checkbox" />
+            <label>Save Excel file & open CAD</label>
+        </div>
+        <div class="checklist-item indented">
+            <input type="checkbox" />
+            <label>Right click the chain icon at the bottom right of CAD</label>
+        </div>
+        <div class="checklist-item indented">
+            <input type="checkbox" />
+            <label>Click Update All Datalinks</label>
+        </div>
+        <div class="checklist-item indented">
+            <input type="checkbox" />
+            <label>Once datalinks are updated type REA command (REGENALL)</label>
+        </div>
+    </div>
+</div>
+
+<!-- Z-100.00 Site Plan Section -->
+<div class="checklist-section">
+    <div class="checklist-title">Z-100.00 Site Plan</div>
+    <div class="checklist-border">
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Create a copy of Preliminary Design and place it in Site Plan section in model space</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Verify Property Line Dimensions in ZOLA and draw the property line accordingly in CAD</label>
+        </div>
+        <div class="checklist-item conditional pitch" style="display: none;">
+            <input type="checkbox" />
+            <label>Scale the overhead view of the home to the pitch of the roof</label>
+        </div>
+        <div class="checklist-item indented conditional pitch" style="display: none;">
+            <input type="checkbox" />
+            <label>Draw a triangle with the Y axis being the roof's rise (x) and the X axis being the roof's run (12)</label>
+        </div>
+        <div class="checklist-item indented conditional pitch" style="display: none;">
+            <input type="checkbox" />
+            <label>Scale the hypotenuse of the triangle to the edge of the roof</label>
+        </div>
+        <div class="checklist-item indented conditional pitch" style="display: none;">
+            <input type="checkbox" />
+            <label>Size the roof to the Y axis of the scaled triangle</label>
+        </div>
+        <div class="checklist-item conditional pitch" style="display: none;">
+            <input type="checkbox" />
+            <label>Replace modules drawn on preliminary design to modules converted to the pitch of the roof (see module pitch block)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Place all applicable leaders on the site plan</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Place property line dimensions (MTEXT needs to be manually updated per property line dimensions)</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Draw adjacent property line</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Add main street and cross street(s) outside property line</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Draw adjacent building and place Adjacent Building text</label>
+        </div>
+        <div class="checklist-item indented">
+            <input type="checkbox" />
+            <label>Add adjacent building's height if structure is connected to project home</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Scale viewport on Site Plan's paper space to x/xx" = 1'-0"</label>
+        </div>
+        <div class="checklist-item indented">
+            <input type="checkbox" />
+            <label>Type REA (REGENALL) to refresh the scale in the bottom left</label>
+        </div>
+        <div class="checklist-item">
+            <input type="checkbox" />
+            <label>Select if project contains any Outlier Sheets (i.e. Basement Plan, Flood Zone, Landmark, etc.) in the top right corner of layout</label>
+        </div>
+        <div class="checklist-item indented conditional landmark" style="display: none;">
+          <input type="checkbox" />
+          <label>Select roof type and Landmark to populate sheets across the drawing</label>
+        </div>
+        <div class="checklist-item indented conditional basement" style="display: none;">
+          <input type="checkbox" />
+          <label>Select your roof type and Basement/Garage Plan to populate sheets across the drawing</label>
+        </div>
+        <div class="checklist-item indented conditional flood" style="display: none;">
+          <input type="checkbox" />
+          <label>Select roof type (Flood Zone) and number of pages to populate sheets across the drawing</label>
+        </div>
+    </div>
+</div>
+<!-- A-100.00 Roof Plan Section -->
+<div class="checklist-section">
+  <div class="checklist-title">A-100.00 Roof Plan</div>
+  <div class="checklist-border">
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Create a copy of the Site Plan roof and place it in the Roof Plan area in model space</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Delete any additional leaders or dimensions</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Create clear access pathways by offsetting 3' off of the ridge for pitched roofs or 6' from the arrays for flat roofs</label>
+      </div>
+      <div class="checklist-item indented">
+        <input type="checkbox" />
+        <label>Hatch the clear access pathways and match to the Clear Access Pathway hatch pattern on the left side of the drawing area</label>
+       </div>
+      <div class="checklist-item conditional pitch" style="display: none;">
+          <input type="checkbox" />
+          <label>For Pitched roofs, the ridge setback will need to be converted to the pitch of the roof</label>
+      </div>
+      <div class="checklist-item indented conditional pitch" style="display: none;">
+          <input type="checkbox" />
+          <label>Draw a triangle with the Y axis being the roof's rise (x) and the X axis being the roof's run (12)</label>
+      </div>
+      <div class="checklist-item indented conditional pitch" style="display: none;">
+          <input type="checkbox" />
+          <label>Scale the hypotenuse of the triangle to 3'-0" (The setback distance)</label>
+      </div>
+      <div class="checklist-item indented conditional pitch" style="display: none;">
+          <input type="checkbox" />
+          <label>Scale the setbacks to the Y axis of the triangle</label>
+      </div>
+      <div class="checklist-item conditional pitch" style="display: none;">
+          <input type="checkbox" />
+          <label>Place roof slope leaders on applicable roof planes</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Place Clear Access Pathway text and dimensions</label>
+      </div>
+      <div class="checklist-item indented conditional flat" style="display: none;">
+        <input type="checkbox" />
+        <label>Add 6' x 6' Landing Path on each side of the roof at the end of Clear Access Pathway</label>
+      </div>
+      <div class="checklist-item indented conditional flat" style="display: none;">
+        <input type="checkbox" />
+        <label>Draw line with arrows at the end across entire Clear Access Pathway indicating FDNY Path of Travel</label>
+      </div>
+      <div class="checklist-item indented conditional flat" style="display: none;">
+        <input type="checkbox" />
+        <label>Dimension the Clear Access Pathway across the entire roof, to each obstruction and between arrays</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Place a dimension on each side of the house measuring it's entire width</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Place all applicable leaders to the Roof Plan</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Place Front of Home and Side of Home arrows in their corresponding areas</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Place main street in front of home</label>
+      </div>
+      <div class="checklist-item conditional canopy" style="display: none;">
+        <input type="checkbox" />
+        <label>In paper space, delete the existing main viewport and replace it with the 2 side by side viewports beneath the layout</label>
+      </div>
+      <div class="checklist-item indented conditional canopy" style="display: none;">
+        <input type="checkbox" />
+        <label>One of the pages should contain your canopy layout, with the other one showing the FDNY Fire Pathways</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Scale viewport on Roof Plan's paper space to x/xx" = 1'-0"</label>
+      </div>
+      <div class="checklist-item indented">
+          <input type="checkbox" />
+          <label>Type REA (REGENALL) to refresh the scale in the bottom left</label>
+      </div>
+      <div class="checklist-item bold">
+          <input type="checkbox" />
+          <label>Select BOS Location in the top right corner of the paper space</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Ensure Attachment Detail matches selected roof type</label>
+      </div>
+      <div class="checklist-item indented conditional canopy" style="display: none;">
+        <input type="checkbox" />
+        <label>Change the attachment detail by selecting "Canopy Mount" in the top-left viewport</label>
+      </div>
+      <div class="checklist-item conditional canopy" style="display: none;">
+        <input type="checkbox" />
+        <label>Drag Canopy Additional Note located on the side of the layout over to the existing notes</label>
+      </div>
+  </div>
+</div>
+
+<!-- A-200.00 & A-200.1 Front Elevation & Side Elevation -->
+<div class="checklist-section">
+  <div class="checklist-title">A-200.00 & A-200.1 Front Elevation & Side Elevation</div>
+  <div class="checklist-border">
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Make a copy of the Roof Plan (without leaders or dimensions) and place copies in the Front Elevation and Side Elevation sections</label>
+      </div>
+      <div class="checklist-item indented">
+          <input type="checkbox" />
+          <label>For A-200.00, rotate the copied roof plan so it is facing vertically and the front of the house is facing down</label>
+      </div>
+      <div class="checklist-item indented">
+          <input type="checkbox" />
+          <label>Draw lines from each edge of the home straight down about 50'-0"</label>
+      </div>
+      <div class="checklist-item indented">
+          <input type="checkbox" />
+          <label>Draw a horizontal line at the bottom of those lines connecting them together</label>
+      </div>
+      <div class="checklist-item indented">
+          <input type="checkbox" />
+          <label>Offset that line by the home's roof height</label>
+      </div>
+      <div class="checklist-item indented">
+          <input type="checkbox" />
+          <label>Draw out all necessary features of the home including roof line, doors, garage, obstructions, stairs, etc. according to the overhead drawing</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Place modules on the home if viewable from the street</label>
+      </div>
+      <div class="checklist-item indented conditional flat" style="display: none;">
+        <input type="checkbox" />
+        <label>If flat roof is behind a parapet, draw a gray line detailing where the actual roof line is and still detail the flat modules as normal</label>
+      </div>
+      <div class="checklist-item indented conditional pitch" style="display: none;">
+          <input type="checkbox" />
+          <label>If roof type is pitched, show converted pitch module (found in module block). This will include both a front view and a side view for the modules</label>
+      </div>
+      <div class="checklist-item indented conditional pitch" style="display: none;">
+          <input type="checkbox" />
+          <label>If roof type is pitched, show converted fire setback for your pitch. Instead of scaling to the Y axis like on the roof plan, scale to the X axis</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Place BOS equipment with the top being exactly 6'-7" from the ground</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Repeat these steps for the horizontal home on A-201.00 Side Elevation</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Select the "SELECT ZONE FOR SIDE ELEVATION" block and choose the applicable zone for your project</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Explode the block once the right zone has been selected</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Place zoning dimensions and building envelope over the side elevation and resize the dimensions and red extension lines to fit the home</label>
+      </div>
+      <div class="checklist-item indented">
+          <input type="checkbox" />
+          <label>Ensure FINISH GRADE and TOP OF ROOF text stays attached to dimensions once they have been edited</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Copy the dimensions over to the Front Elevation drawing on A-200.00</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Place all relevant leaders on both Front and Side elevations</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Place a 6'-7" dimension going from the ground to the top of the BOS equipment</label>
+      </div>
+      <div class="checklist-item indented conditional pitch" style="display: none;">
+          <input type="checkbox" />
+          <label>For pitched roofs, dimension 0'-6" from the top of the pitched module to the surface of the roof</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>In paper space, scale the viewports for each elevation plan to x/xx" = 1'-0"</label>
+      </div>
+      <div class="checklist-item indented">
+          <input type="checkbox" />
+          <label>Type REA (REGENALL) to refresh the scale in the bottom left</label>
+      </div>
+  </div>
+</div>
+<!-- Placard Section -->
+<div class="checklist-section">
+  <div class="checklist-title">Placard</div>
+  <div class="checklist-border">
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Copy the Site Plan roof with all of its leaders and main street over to the red Placard page</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Adjust the leaders and main street to better fit the Placard page</label>
+      </div>
+      <div class="checklist-item">
+          <input type="checkbox" />
+          <label>Explode the home and its leaders, then match properties to the white Placard layer</label>
+      </div>
+  </div>
+</div>
+  <script>
+    // Ensure all checkboxes reset to blank on page refresh
+    window.addEventListener('load', () => {
+      const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+      });
+    });
+  </script>
+  
+  <script src="script.js" defer></script>
+  </body>
+  </html>
+  
